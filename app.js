@@ -1,3 +1,6 @@
+const fontOptions = document.getElementById("fontopt");
+const fontSize = document.getElementById("fontsize");
+const fontWeight = document.getElementById("fontweight");
 const saveBtn = document.getElementById("save");
 const fileInput = document.getElementById("file");
 const textInput = document.getElementById("text");
@@ -18,6 +21,7 @@ const CANVAS_HEIGHT = 800;
 canvas.width=CANVAS_WIDTH;
 canvas.height=CANVAS_HEIGHT;
 ctx.lineWidth=lineWidth.value;
+
 ctx.lineCap="round";
 let isPainting = false;
 let isFilling = false;
@@ -41,7 +45,8 @@ function cancelPainting(event){
 }
 
 function onLineWidthChange(event){
-    ctx.lineWidth=event.target.value;    
+    ctx.lineWidth=event.target.value;
+    fontSize.fontsize=event.target.value;
 }
 
 function onColorChange(event){
@@ -74,8 +79,13 @@ function onCanvasClick(){
 }
 
 function onDestroyClick(){
-    ctx.fillStyle="white";
-    ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    if(confirm("Are U Sure ???")==true){
+        ctx.fillStyle="white";
+        ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    }
+    else{
+        document.forms.submit();
+    }
 }
 
 function onEraserClick(){
@@ -97,11 +107,14 @@ function onFileChange(event){
 
 function onDoubleClick(event){
     const text = textInput.value;
+    const textsize = fontSize.value;
+    const textfont = fontOptions.value;
+    const textweight = fontWeight.value;
     if(text!==""){
         ctx.save();
-        ctx.lineWidth=1;
-        ctx.font = "50px serif"
-        ctx.fillText(text, event.offsetX, event.offsetY);
+        ctx.lineWidth=1; // text가 잘 보이게됨(안 겹쳐 보임)
+        ctx.font = `${textweight} ${textsize}px ${textfont}`; // ctx.font = `${fontsize} ${fontopt}`
+        ctx.strokeText(text, event.offsetX, event.offsetY);
         ctx.restore();
     }
 }
@@ -113,6 +126,7 @@ function onSaveClick(event){
     a.download="myDrawing.png";
     a.click();
 }
+
 
 canvas.addEventListener("dblclick",onDoubleClick);
 canvas.addEventListener("mousemove",onMove);
